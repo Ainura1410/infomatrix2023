@@ -1,0 +1,201 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C _lcd1(0x27, 20, 4);
+int _dispTempLength1=0;
+boolean _isNeedClearDisp1;
+int _ultrasonic2O = 0;
+unsigned long _ultrasonic2P = 0UL;
+int _disp2oldLength = 0;
+int _ultrasonic3O = 0;
+unsigned long _ultrasonic3P = 0UL;
+int _disp3oldLength = 0;
+String _swi5;
+int _ultrasonic4O = 0;
+unsigned long _ultrasonic4P = 0UL;
+String _swi1;
+int _disp5oldLength = 0;
+String _swi2;
+String _swi3;
+int _ultrasonic1O = 0;
+unsigned long _ultrasonic1P = 0UL;
+int _disp1oldLength = 0;
+void setup()
+{
+    Wire.begin();
+    delay(10);
+    _lcd1.init();
+    _lcd1.backlight();
+    pinMode(3, OUTPUT);
+    pinMode(2, INPUT);
+    pinMode(5, OUTPUT);
+    pinMode(4, INPUT);
+    pinMode(9, OUTPUT);
+    pinMode(8, INPUT);
+    pinMode(7, OUTPUT);
+    pinMode(6, INPUT);
+}
+void loop()
+{
+    if (_isNeedClearDisp1) 
+    {
+        _lcd1.clear();
+        _isNeedClearDisp1= 0;
+    }
+    //Плата:1
+    if (abs((millis() - _ultrasonic1P))>100) 
+    {
+        digitalWrite(3, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(3, LOW);
+        int _ultrasonicTemp=(pulseIn(2, HIGH))/58;
+        if(_ultrasonicTemp<200) 
+        {
+            _ultrasonic1O=_ultrasonicTemp;
+        }
+        _ultrasonic1P=millis();
+    }
+    if(((_ultrasonic1O)) < (30))
+    {
+        _swi5=String("1 turak bos emes");
+    }
+    else
+    {
+        _swi5=String("1 turak bos");
+    }
+    if (!(1)) 
+    {
+        _dispTempLength1 = ((_swi5)).length();
+        if (_disp5oldLength > _dispTempLength1) 
+        {
+            _isNeedClearDisp1 = 1;
+        }
+        _disp5oldLength = _dispTempLength1;
+        _lcd1.setCursor(0, 0);
+        _lcd1.print((_swi5));
+    }
+     else 
+    {
+        if (_disp5oldLength > 0) 
+        {
+            _isNeedClearDisp1 = 1;
+            _disp5oldLength = 0;
+        }
+    }
+    if (abs((millis() - _ultrasonic2P))>100) 
+    {
+        digitalWrite(5, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(5, LOW);
+        int _ultrasonicTemp=(pulseIn(4, HIGH))/58;
+        if(_ultrasonicTemp<200) 
+        {
+            _ultrasonic2O=_ultrasonicTemp;
+        }
+        _ultrasonic2P=millis();
+    }
+    if(((_ultrasonic2O)) < (30))
+    {
+        _swi1=String("2 turak bos emes");
+    }
+    else
+    {
+        _swi1=String("2 turak bos");
+    }
+    if (!(1)) 
+    {
+        _dispTempLength1 = ((_swi1)).length();
+        if (_disp1oldLength > _dispTempLength1) 
+        {
+            _isNeedClearDisp1 = 1;
+        }
+        _disp1oldLength = _dispTempLength1;
+        _lcd1.setCursor(0, 1);
+        _lcd1.print((_swi1));
+    }
+     else 
+    {
+        if (_disp1oldLength > 0) 
+        {
+            _isNeedClearDisp1 = 1;
+            _disp1oldLength = 0;
+        }
+    }
+    if (abs((millis() - _ultrasonic3P))>100) 
+    {
+        digitalWrite(7, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(7, LOW);
+        int _ultrasonicTemp=(pulseIn(6, HIGH))/58;
+        if(_ultrasonicTemp<200) 
+        {
+            _ultrasonic3O=_ultrasonicTemp;
+        }
+        _ultrasonic3P=millis();
+    }
+    if(((_ultrasonic3O)) < (30))
+    {
+        _swi2=String("3 turak bos emes");
+    }
+    else
+    {
+        _swi2=String("3 turak bos");
+    }
+    if (!(1)) 
+    {
+        _dispTempLength1 = ((_swi2)).length();
+        if (_disp2oldLength > _dispTempLength1) 
+        {
+            _isNeedClearDisp1 = 1;
+        }
+        _disp2oldLength = _dispTempLength1;
+        _lcd1.setCursor(0, 2);
+        _lcd1.print((_swi2));
+    }
+     else 
+    {
+        if (_disp2oldLength > 0) 
+        {
+            _isNeedClearDisp1 = 1;
+            _disp2oldLength = 0;
+        }
+    }
+    if (abs((millis() - _ultrasonic4P))>100) 
+    {
+        digitalWrite(9, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(9, LOW);
+        int _ultrasonicTemp=(pulseIn(8, HIGH))/58;
+        if(_ultrasonicTemp<200) 
+        {
+            _ultrasonic4O=_ultrasonicTemp;
+        }
+        _ultrasonic4P=millis();
+    }
+    if(((_ultrasonic4O)) < (30))
+    {
+        _swi3=String("4 turak bos emes");
+    }
+    else
+    {
+        _swi3=String("4 turak bos");
+    }
+    if (!(1)) 
+    {
+        _dispTempLength1 = ((_swi3)).length();
+        if (_disp3oldLength > _dispTempLength1) 
+        {
+            _isNeedClearDisp1 = 1;
+        }
+        _disp3oldLength = _dispTempLength1;
+        _lcd1.setCursor(0, 3);
+        _lcd1.print((_swi3));
+    }
+     else 
+    {
+        if (_disp3oldLength > 0) 
+        {
+            _isNeedClearDisp1 = 1;
+            _disp3oldLength = 0;
+        }
+    }
+}

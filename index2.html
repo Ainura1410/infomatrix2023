@@ -1,0 +1,35 @@
+bool StartTrack_246847042_2;
+bool _dfstart1_246847042_2= 0;
+bool _dfstart1I_246847042_2= 0;
+void setup()
+{
+    pinMode(24, INPUT);
+}
+void loop()
+{
+    //Плата:1
+    StartTrack_246847042_2 =  (digitalRead (24));
+    if (StartTrack_246847042_2) 
+    {
+         if (_dfstart1I_246847042_2) 
+        {
+             _dfstart1_246847042_2 = 0;
+        }
+         else 
+        {
+            _dfstart1_246847042_2 = 1;
+            _dfstart1I_246847042_2 = 1;
+        }
+    }
+     else 
+    {
+        _dfstart1_246847042_2 = 0;
+        _dfstart1I_246847042_2 = 0;
+    }
+    ;
+    if(_dfstart1_246847042_2 == true) 
+    {
+        dfPlayerMega.start_track (1, 6);
+    }
+    ;
+}

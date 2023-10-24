@@ -1,0 +1,193 @@
+#include <Servo.h>
+Servo _SM1;
+struct _sVFUPD
+{
+    int mode=0;
+    int port=0;
+    int index=0;
+    String data="";
+}
+;
+_sVFUPD _sVFUPDPort0;
+bool StartTrack_246847042_2;
+bool _dfstart1_246847042_2= 0;
+bool _dfstart1I_246847042_2= 0;
+int _swi2;
+bool _RV3CP0 = 0;
+void setup()
+{
+    pinMode(22, INPUT);
+    _SM1.attach(29);
+    _startUart0();
+    _sVFUPDPort0.port = 0;
+}
+void loop()
+{
+    if (Serial.available()) 
+    {
+         _readByteFromUART((Serial.read()),0);
+    }
+    //Плата:1
+    StartTrack_246847042_2 = (((digitalRead (22))) || (_RV3CP0));
+    if (StartTrack_246847042_2) 
+    {
+         if (_dfstart1I_246847042_2) 
+        {
+             _dfstart1_246847042_2 = 0;
+        }
+         else 
+        {
+            _dfstart1_246847042_2 = 1;
+            _dfstart1I_246847042_2 = 1;
+        }
+    }
+     else 
+    {
+        _dfstart1_246847042_2 = 0;
+        _dfstart1I_246847042_2 = 0;
+    }
+    ;
+    if(_dfstart1_246847042_2 == true) 
+    {
+        dfPlayerMega.start_track (1, 2);
+    }
+    ;
+    if((((digitalRead (22))) || (_RV3CP0)))
+    {
+        _swi2=0;
+    }
+    else
+    {
+        _swi2=90;
+    }
+    if ((((digitalRead (22))) || (_RV3CP0))) 
+    {
+        _SM1.write (_swi2);
+    }
+}
+void _readByteFromUART(byte data,int port)
+{
+    if (port==0)
+    {
+         _sVFUPDPort0 = _ressiveByteFromUartForVariable(data, _sVFUPDPort0);
+    }
+}
+struct  _sVFUPD _ressiveByteFromUartForVariable(byte resData, struct _sVFUPD data)
+{
+    if(_ressiveFromUartByteIsCommand(resData))
+    {
+        data = _nextStepRessiveVariableFromUart(resData, data);
+        return data;
+    }
+    data.data = data.data + char(resData);
+    return data;
+}
+bool _ressiveFromUartByteIsCommand(byte data)
+{
+    if(data==1)
+    {
+        return 1;
+    }
+    if(data==2)
+    {
+        return 1;
+    }
+    if(data==3)
+    {
+        return 1;
+    }
+    return 0;
+}
+struct  _sVFUPD _nextStepRessiveVariableFromUart(byte resData, struct _sVFUPD data)
+{
+    if((resData==1)&&(data.mode==0))
+    {
+        data.mode=1;
+        return data;
+    }
+    if((resData==2)&&(data.mode==1))
+    {
+        data.mode=2;
+        data.index=data.data.toInt();
+        data.data=String("");
+        return data;
+    }
+    if((resData==3)&&(data.mode==2))
+    {
+        data=_saveToVariableResiveFromUartVariable(data);
+        return data;
+    }
+    data.mode=0;
+    data.data=String("");
+    return data;
+}
+struct _sVFUPD _saveToVariableResiveFromUartVariable(struct _sVFUPD data)
+{
+    if((data.index==3)&&(data.port==0))
+    {
+        _RV3CP0 = ((data.data).toInt());
+    }
+    data.mode=0;
+    data.data=String("");
+    return data;
+}
+void _startUart0()
+{
+    int code= 6;
+    Serial.begin(9600, (_serialModeFromInt(code)));
+}
+int  _serialModeFromInt(int code)
+{
+    switch (code) 
+    {
+        case 0x00: return SERIAL_5N1;
+        break;
+        case 0x02: return SERIAL_6N1;
+        break;
+        case 0x04: return SERIAL_7N1;
+        break;
+        case 0x06: return SERIAL_8N1;
+        break;
+        case 0x08: return SERIAL_5N2;
+        break;
+        case 0x0A: return SERIAL_6N2;
+        break;
+        case 0x0C: return SERIAL_7N2 ;
+        break;
+        case 0x0E: return SERIAL_8N2;
+        break;
+        case 0x20: return SERIAL_5E1;
+        break;
+        case 0x22: return SERIAL_6E1;
+        break;
+        case 0x24: return SERIAL_7E1 ;
+        break;
+        case 0x26: return SERIAL_8E1;
+        break;
+        case 0x28: return SERIAL_5E2 ;
+        break;
+        case 0x2A: return SERIAL_6E2;
+        break;
+        case 0x2C: return SERIAL_7E2;
+        break;
+        case 0x2E: return SERIAL_8E2;
+        break;
+        case 0x30: return SERIAL_5O1;
+        break;
+        case 0x32: return SERIAL_6O1;
+        break;
+        case 0x34: return SERIAL_7O1;
+        break;
+        case 0x36: return SERIAL_8O1;
+        break;
+        case 0x38: return SERIAL_5O2;
+        break;
+        case 0x3A: return SERIAL_6O2 ;
+        break;
+        case 0x3C: return SERIAL_7O2;
+        break;
+        case 0x3E: return SERIAL_8O2;
+        break;
+    }
+    return SERIAL_8N1;
+}
